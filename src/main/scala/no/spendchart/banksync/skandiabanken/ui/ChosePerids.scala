@@ -22,20 +22,22 @@ import no.spendchart.banksync.util._
 import no.spendchart.banksync._
 import scala.swing._
 import java.awt.Font
-import ui.mig._
+import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
+import no.trondbjerkestrand.migpanel._
+import no.trondbjerkestrand.migpanel.constraints._
 
-class ChosePeriods(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccounts: Seq[(BankAccount, String)]) extends ui.MigPanel {
+class ChosePeriods(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccounts: Seq[(BankAccount, String)]) extends MigPanel {
   val periods = s.getPeriods(newAccounts.head) // TODO: add some logic for year select accounts
   val periodsComboBox = new ComboBox(items = periods) 
   add(Heading("Skandibanken - Velg periode"), Span(3) >> Wrap >> GapBottom(0))
   add(new Label("Velg hvor langt tilbake i tid du ønsker å synkronisere:"), Span(3) >> Wrap >> GapBottom(0))
-  add(new Label("Fra:"), RawConstraint("gapright 10px"))
+  add(new Label("Fra:"), GapRight(10 px))
   add(periodsComboBox, Wrap)
   add(Button("Start") {
     Banksync.setView(ui.Wait("Forbereder synkronisering"))
     SyncActor ! CreateAccount(newAccounts, Some(periodsComboBox.selection.item))
     SyncActor ! msg.StartSync(s, newAccounts.map((_, periodsComboBox.selection.item)).toList ::: oldAccounts.toList)
-  }, Skip(1) >> RawConstraint("ax trailing"))
+  }, Skip(1) >> AlignX.trailing)
   add(new Label(""), Wrap) //Hack	
   border = Swing.EmptyBorder(5, 5, 5, 5)
 }

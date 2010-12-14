@@ -22,10 +22,13 @@ import no.spendchart.banksync.util._
 import no.spendchart.banksync._
 import scala.swing._
 import java.awt.Font
-import ui.mig._
 
+import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
 
-class Login(s: SkandiabankenSync, messages: List[String] = Nil) extends ui.MigPanel {
+import no.trondbjerkestrand.migpanel._
+import no.trondbjerkestrand.migpanel.constraints._
+
+class Login(s: SkandiabankenSync, messages: List[String] = Nil) extends MigPanel {
     object socialSecurity extends TextField { columns = 11 }
     object bankPassword extends PasswordField { columns = 11 }
     val syncButton = Button("Start") {

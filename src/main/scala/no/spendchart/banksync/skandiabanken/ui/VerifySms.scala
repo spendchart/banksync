@@ -22,9 +22,11 @@ import no.spendchart.banksync.util._
 import no.spendchart.banksync._
 import scala.swing._
 import java.awt.Font
-import ui.mig._
+import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
+import no.trondbjerkestrand.migpanel._
+import no.trondbjerkestrand.migpanel.constraints._
 
-class VerifySms(s: SkandiabankenSync, messages: Option[String] = None) extends ui.MigPanel {
+class VerifySms(s: SkandiabankenSync, messages: Option[String] = None) extends MigPanel {
     val syncButton = Button("Send") {
       Banksync.setView(ui.Wait("Verifiserer kode fra SMS..."))
       SyncActor ! SmsCode(s, smsCode.text)

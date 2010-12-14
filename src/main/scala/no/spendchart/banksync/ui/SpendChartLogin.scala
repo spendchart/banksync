@@ -18,7 +18,9 @@ package no.spendchart.banksync.ui
 
 import no.spendchart.banksync._
 import scala.swing._
-import mig._
+
+import no.trondbjerkestrand.migpanel._
+import no.trondbjerkestrand.migpanel.constraints._
 
 class SpendChartLogin(messages: List[String] = Nil) extends MigPanel {
   val loginButton = Button("Logg inn") {
@@ -27,13 +29,13 @@ class SpendChartLogin(messages: List[String] = Nil) extends MigPanel {
   }
   object username extends TextField { columns = 11 }
   object password extends PasswordField { columns = 11 }
-  add(Heading("Logg inn til SpendChart.no"), Span(3) >> Wrap >> RawConstraint("gapbottom 5px"))
-  messages.foreach(msg => add(ErrorMessage(msg), Span(3) >> Wrap >> RawConstraint("gapbottom 5px")))
-  add(new Label("Brukernavn:"), RawConstraint("gapright 10px"))
+  add(Heading("Logg inn til SpendChart.no"), Span(3) >> Wrap >> GapBottom(5 px))
+  messages.foreach(msg => add(ErrorMessage(msg), Span(3) >> Wrap >> GapBottom(5 px)))
+  add(new Label("Brukernavn:"), GapRight(10 px))
   add(username, Wrap)
   add(new Label("Passord:"))
   add(password, Wrap)	
-  add(loginButton, Skip(1) >> RawConstraint("ax trailing"))
+  add(loginButton, Skip(1) >> AlignX.trailing)
   add(new Label(""), Wrap) //Hack	
   border = Swing.EmptyBorder(5, 5, 5, 5)
 }
