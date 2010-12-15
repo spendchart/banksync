@@ -1,7 +1,7 @@
 !include "MUI.nsh"
 
-Name "SpendChart BankSync"
-OutFile spendchart_install.exe
+Name "SpendChart Banksync"
+OutFile Banksync-installer.exe
 XPStyle on
 
 !define MUI_ICON "spendchart-icon.ico"
@@ -15,7 +15,7 @@ XPStyle on
 !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "Legg til snarvei på skrivebordet"
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION finishpageaction
-!define MUI_FINISHPAGE_RUN "$PROGRAMFILES\SpendChart\BankSync.exe"
+!define MUI_FINISHPAGE_RUN "$PROGRAMFILES\SpendChart\Banksync.exe"
 !define MUI_FINISHPAGE_LINK "Se spendchart.no for mer informasjon."
 !define MUI_FINISHPAGE_LINK_LOCATION "https://www.spendchart.no"
 
@@ -29,16 +29,16 @@ XPStyle on
 InstallDir $PROGRAMFILES\SpendChart
 
 Function finishpageaction
-	createShortCut "$DESKTOP\SpendChart.lnk" "$PROGRAMFILES\SpendChart\BankSync.exe"
+	createShortCut "$DESKTOP\SpendChart.lnk" "$PROGRAMFILES\SpendChart\Banksync.exe"
 FunctionEnd
 
 Section
 	Call DownloadAndInstallJREIfNecessary 
-	WriteRegStr HKLM "Software\SpendChart\BankSync" "InstallDir" "$INSTDIR"
+	WriteRegStr HKLM "Software\SpendChart\Banksync" "InstallDir" "$INSTDIR"
 	SetOutPath $INSTDIR
-  File BankSync.exe
+  File Banksync.exe
 SectionEnd
 
 Section
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "BankSync" "$PROGRAMFILES\SpendChart\BankSync.exe"
+  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Banksync" "$PROGRAMFILES\SpendChart\Banksync.exe"
 SectionEnd

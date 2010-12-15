@@ -3,10 +3,10 @@
  
 ;You want to change the next four lines
 Name "BankSync"
-Caption "SpendChart BankSync"
+Caption "SpendChart Banksync"
 Icon "${NSISDIR}\contrib\graphics\icons\spendchart-icon.ico"
 ;Icon "icon.ico"
-OutFile "BankSync.exe"
+OutFile "Banksync.exe"
  
 RequestExecutionLevel user
 SilentInstall silent
@@ -14,8 +14,8 @@ AutoCloseWindow true
 ShowInstDetails nevershow
 
 ;You want to change the next two lines too
-!define TARGET "C:\Users\Bruker\eris\syncapp\target\scala_2.8.0"
-!define FILE "syncapp_2.8.0-1.0.min.jar"
+!define TARGET "..\target\scala_2.8.1"
+!define FILE "syncapp_2.8.1-0.2-SNAPSHOT.min.jar"
 !define JAR "${TARGET}\${FILE}"
  
 Section ""

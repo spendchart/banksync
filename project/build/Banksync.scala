@@ -3,7 +3,7 @@ import java.io.File
 import java.lang.System
 import de.element34.sbteclipsify._
 
-class BankSync(info: ProjectInfo) extends DefaultProject(info) with Eclipsify with ProguardProject {
+class Banksync(info: ProjectInfo) extends DefaultProject(info) with Eclipsify with ProguardProject {
 	override def mainClass: Option[String] = Some("no.spendchart.banksync.Banksync")
   override def proguardOptions = 
 		"-dontobfuscate" ::
