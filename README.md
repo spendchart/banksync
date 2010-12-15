@@ -20,7 +20,7 @@ Med simple-build-tool og git installert kan du gå fram som følger:
 		sbt update
 		sbt proguard
 
-Den ferdige jar filen kan du finne i _target/scala_2.8.1/banksync_.2.8.1-1.0.min.jar_
+Den ferdige jar filen kan du finne i *target/scala_2.8.1/banksync_.2.8.1-1.0.min.jar*.
 
 For å kjøre programmet direkte kan du benytte:
 
