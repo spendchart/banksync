@@ -13,7 +13,7 @@ at denne er bygd fra kildekoden som er gjort tilgjengelig på [http://github/spe
 ### Byggeinstruksjoner: ###
 For å bygge Banksync trenger du [simple-build-tool](http://code.google.com/p/simple-build-tool/). 
 
-Med simple-build-tool og git installert kan du gå fram som følger:
+Med [simple-build-tool](http://code.google.com/p/simple-build-tool/) og [git](http://git-scm.com) installert kan du gå fram som følger:
    
 		git clone git://github.com/spendchart/banksync.git
 		cd banksync
@@ -28,10 +28,11 @@ For å kjøre programmet direkte kan du benytte:
 
 Script for generering av .exe fil er gjort tilgjengelig i nis katalogen.
 
+### Endringsønsker / patcher: ###
+[Endringsønsker](https://github.com/spendchart/banksync/issues) og pull requests mottas med takk. Vi vil verifisere all 
+kode som legges ut på [http://github/spendchart/banksync](http://github/spendchart/banksync). 
+Forks kan vi ikke garantere for.
+
 ### Sikkerhet: ###
 Om du skulle komme over sikkerhetsmessige sårbarheter i kildekoden setter vi pris
-på om du tar kontakt med oss direkte.
-
-### Endringsønsker / patcher: ###
-Endringsønsker og pull requests mottas med takk. Vi vil selvsagt verifisere all
-kode som legges ut på [http://github/spendchart/banksync](http://github/spendchart/banksync)
+på om du tar kontakt med oss [direkte](http://spendchart.no/about_us) istedenfor å benytte githubs Issues.
