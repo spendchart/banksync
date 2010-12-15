@@ -1,13 +1,13 @@
 SpendChart Banksync
--------------------
+===================
 SpendChart Banksync er en applikasjon for å hente kontoutskrifter fra din 
-nettbank og laste de opp til SpendChart.no. På denne måten kan du enkelt kan få oversikt
+nettbank og laste de opp til [SpendChart.no](https://www.spendchart.no). På denne måten kan du enkelt få oversikt
 over ditt forbruk og din økonomi. 
 
 Klienten er gjort tilgjengelig for at du skal kunne verifisere at applikasjonen
-gjør det den lover og at du eventuelt kan modifisere den etter egne behov.
+gjør det den lover og slik at du kan modifisere den etter egne behov.
 
-SpendChart tilbyr signert installer av applikasjonen til windows på [spendchart.no](https://spendchart.no). Vi garnanterer
+SpendChart tilbyr signert installer av applikasjonen til windows på [SpendChart.no](https://www.spendchart.no). Vi garnanterer
 at denne er bygd fra kildekoden som er gjort tilgjengelig på [http://github/spendchart/banksync](http://github/spendchart/banksync). 
 
 ### Byggeinstruksjoner: ###
