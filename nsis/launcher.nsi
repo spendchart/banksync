@@ -2,10 +2,9 @@
 ;--------------
  
 ;You want to change the next four lines
-Name "BankSync"
+Name "Banksync"
 Caption "SpendChart Banksync"
 Icon "${NSISDIR}\contrib\graphics\icons\spendchart-icon.ico"
-;Icon "icon.ico"
 OutFile "Banksync.exe"
  
 RequestExecutionLevel user
