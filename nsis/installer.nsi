@@ -39,6 +39,6 @@ Section
   File Banksync.exe
 SectionEnd
 
-Section
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Banksync" "$PROGRAMFILES\SpendChart\Banksync.exe"
-SectionEnd
+#Section
+  #WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Banksync" "$PROGRAMFILES\SpendChart\Banksync.exe"
+#SectionEnd
