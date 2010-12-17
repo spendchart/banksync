@@ -64,7 +64,8 @@ object Banksync extends Application with Actor {
 	import util._	
   val applicationName = "SpendChart.no Banksync"
   val runMode = Option(System.getProperty("runMode")).map(x => RunMode.valueOf(x)).flatMap(x => x).getOrElse(RunMode.Production)
-
+	val tray = false	
+	val showAtStartup = true	
   val s = runMode match {
     case RunMode.Production | RunMode.TestServer => new SkandiabankenSyncImpl
     case RunMode.Test | RunMode.TestBank => new SkandiabankenSyncTest
@@ -91,6 +92,38 @@ object Banksync extends Application with Actor {
 
   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
+  val frame = new Frame {
+    val (width, height) = (600, 200)
+    size = (width, height)
+    preferredSize = size
+    title = applicationName
+		iconImage = getImage("coins.gif")	
+    reactions += {
+      case WindowClosing(e) => 
+				this.visible = false
+				if (!tray) {
+						SyncActor ! msg.Shutdown
+						Banksync ! msg.Shutdown
+						System.exit(0)
+				}
+    }
+    peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+    val gc = this.peer.getGraphicsConfiguration
+    val screensize = Toolkit.getDefaultToolkit.getScreenSize
+    val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
+    putAtBottomRight()
+    def putAtBottomRight() {
+      val x = screensize.width - width - insets.right
+      val y = screensize.height - height - insets.bottom
+      location = (x, y)
+    }
+  }
+  def setView(panel: Panel) { frame.contents = panel }
+
+  setView(ui.SpendChartLogin())
+
+
+	if (tray) {	
   val tray = SystemTray.getSystemTray()
   val popup = new PopupMenu()
   val syncItem = new MenuItem("Synk")
@@ -114,7 +147,6 @@ object Banksync extends Application with Actor {
   trayIcon.addMouseListener(trayIconMouseListener)
   trayIcon.setPopupMenu(popup)
   tray.add(trayIcon)
-
   exitItem.addActionListener(new ActionListener() {
     def actionPerformed(e: ActionEvent) {
       tray.remove(trayIcon)
@@ -123,36 +155,16 @@ object Banksync extends Application with Actor {
       System.exit(0)
     }
   })
-
-  val frame = new Frame {
-    val (width, height) = (600, 200)
-    size = (width, height)
-    preferredSize = size
-    title = applicationName
-		iconImage = getImage("coins.gif")	
-    reactions += {
-      case WindowClosing(e) => this.visible = false
-    }
-    peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-    val gc = this.peer.getGraphicsConfiguration
-    val screensize = Toolkit.getDefaultToolkit.getScreenSize
-    val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
-    putAtBottomRight()
-    def putAtBottomRight() {
-      val x = screensize.width - width - insets.right
-      val y = screensize.height - height - insets.bottom
-      location = (x, y)
-    }
-  }
-
-  def setView(panel: Panel) { frame.contents = panel }
-
-  setView(ui.SpendChartLogin())
   syncItem.addActionListener(new ActionListener() {
     def actionPerformed(e: ActionEvent) {
       frame.visible = true
     }
   })
+	}
+	if (showAtStartup) {
+		frame.visible = true
+	}
+
   SyncActor.start
 }
 
