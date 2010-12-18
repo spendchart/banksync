@@ -25,13 +25,14 @@ import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
-class ChoseAccounts(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccounts: Seq[(BankAccount, String)]) extends MigPanel {
+class ChoseAccounts(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccounts: Seq[(BankAccount, String)]) 
+		extends MigPanel("", "", "[]7[]0[]0[]") {
   val accountsCheckBoxes = newAccounts.map(a => new CheckBox {
     text = a.name
   })
-  add(Heading("Skandibanken - Velg konti"), Span(3) >> Wrap >> GapBottom(5 px))
-  add(new Label("Nye konti oppdaget, velg de du ønsker å synkronisere:"), Span(3) >> GapBottom(0 px) >> Wrap)
-	add(new MigPanel("flowy, wrap 3"){
+  add(Heading("Skandiabanken - Velg konti"), Span(3) >> Wrap)
+  add(new Label("Nye konti oppdaget, velg de du ønsker å synkronisere:"), Span(3) >> Wrap)
+	add(new MigPanel("flowy, wrap 3", "", "[]0[]0[]0"){
 		  accountsCheckBoxes.foreach(add(_))
 	}, Wrap)
   add(Button("Velg") {
