@@ -34,7 +34,6 @@ package msg {
   case class Sync(account: BankAccount, period: String)
   case class Wait(msg: String)
   case class Notice(msg: String)
-  case class Cancel(msg: String)
   case class MainMenu(msg: Option[Label] = None)
   case class Login(msg: List[String] = Nil)
   case class SkLogin(s: SkandiabankenSync, msg: List[String] = Nil)
@@ -77,7 +76,6 @@ object Banksync extends Application with Actor {
         case msg.Sync(account, period) => setView(ui.Wait("Synkroniserer " + period + " for " + account.number))
         case msg.Wait(msg) => setView(ui.Wait(msg))
         case msg.Notice(msg) => setView(ui.Wait(msg))
-        case msg.Cancel(msg) => setView(ui.Wait(msg))
         case msg.MainMenu(msg) => setView(ui.MainMenu(msg))
         case msg.Login(msg) => setView(ui.SpendChartLogin(msg))
         case msg.SkLogin(s, messages) => setView(skandiabanken.ui.Login(s, messages))
@@ -204,8 +202,7 @@ object SyncActor extends Actor {
             case step1.Failure(message) => 
               Banksync ! msg.SkLogin(s, List(message))
             case step1.Unexpected(message) => 
-							println(message)	
-              Banksync ! msg.Cancel("En uventet situasjon har oppstått. Vennligst prøv igjen.")
+              Banksync ! msg.MainMenu(Some(ErrorMessage("En uventet situasjon har oppstått. Vennligst prøv igjen.")))
           }
         case SmsCode(s, code) =>
           s.completeLogin(code) match {
@@ -214,7 +211,7 @@ object SyncActor extends Actor {
                 case Some(accounts) =>
                   api.checkAccounts(1, accounts.map(_.number.toLong)) match {
                     case Full(CheckAccountsReturn(Nil, sync, noSync)) if sync.isEmpty =>
-                      Banksync ! msg.Cancel("Ingen kontoer å synkronisere, du kan endre instillinger på SpendChart.no")
+                      Banksync ! msg.MainMenu(Some(ErrorMessage("Ingen kontoer å synkronisere, du kan endre instillinger på SpendChart.no")))
                     case Full(CheckAccountsReturn(Nil, sync, noSync)) =>
                       val syncs = for (acc: BankAccount <- accounts; accPer <- sync.get(acc.number)) yield (acc, accPer)
                       this ! msg.StartSync(s, syncs)
@@ -224,7 +221,7 @@ object SyncActor extends Actor {
                       Banksync ! msg.ChoseAccounts(s, newOnes, syncs)
                     case x =>
 		                  println("Got an unexpected state while fetching accounts from SpendChart server: " + x)
-											Banksync ! ui.MainMenu(Some(ErrorMessage("En uventet situasjon har oppstått. Vennligst prøv igjen.")))
+											Banksync ! msg.MainMenu(Some(ErrorMessage("En uventet situasjon har oppstått. Vennligst prøv igjen.")))
                   }
                 case x =>
                   println("Got an unexpected state while fetching accounts from SpendChart server: " + x)
