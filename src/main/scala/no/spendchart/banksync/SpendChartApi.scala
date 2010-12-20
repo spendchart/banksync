@@ -49,8 +49,8 @@ class SuperMimeRequest(r: Request) extends MimeRequest(r) {
 
 class SpendChartApi(val runMode: RunMode.Value) { 
 	implicit def Request2ExtendedRequest(r: Request) = new SuperMimeRequest(r)
-
 	var simpleCookieStore : Option[String] = None	
+	var credentials : Option[(String, String)] = None
 	def extractCookie(res : org.apache.http.HttpResponse) = res.getFirstHeader("Set-Cookie").getValue.split(";").headOption	
 
 	implicit def serviceToString(x:Service) = x.toString
@@ -71,22 +71,30 @@ class SpendChartApi(val runMode: RunMode.Value) {
 				case (200, res, _, out) => 
 					simpleCookieStore = extractCookie(res)
 				  out().toString match { // notice: out() can only be read once!
-						case resp@"Succeeded" => Full(resp)
+						case resp@"Succeeded" => 
+								credentials = Some((username, password))
+								Full(resp)
 						case resp => Failure(resp)
 					}
 				case (code, _,_, out) => Failure(out()) ~> code
 		}
 	}
-	def checkAccounts(bankId: Int, accounts: Seq[Long]) = {
+	def checkAccounts(bankId: Int, accounts: Seq[Long]) :Box[CheckAccountsReturn]= {
 		implicit val formats = net.liftweb.json.DefaultFormats
 		val req = securityMode(baseUrl / CheckAccounts) << Map(CheckAccounts.bankId->bankId, CheckAccounts.accounts -> CheckAccounts.prepare(accounts))
 		http x(securityMode(req) as_str) {
 			case (200, _,_, out) => 
 				try(Full(parse(out()).extract[CheckAccountsReturn])) catch {case x => Failure(x.getMessage)} 
+			case (403, _,_, out) =>
+				credentials.map(x=>login _ tupled (x) match { 
+					case Full(_) => checkAccounts(bankId, accounts)
+					case Failure(x, y, z) => Failure(x, y, z)
+					case _ => Failure("Unknown")
+				}).getOrElse(Failure(out()))
 			case (code, _,_, out) => Failure(code + out())
 		}
 	}
-	def createAccount(bankId: String, accountNumber: String, accountName: String, sync: Boolean, syncFrom: Option[String]) = {
+	def createAccount(bankId: String, accountNumber: String, accountName: String, sync: Boolean, syncFrom: Option[String]) : Box[String] = {
 		val params = Map(
 			CreateAccount.bankId -> bankId, 
 			CreateAccount.accountNumber -> accountNumber,
@@ -96,10 +104,16 @@ class SpendChartApi(val runMode: RunMode.Value) {
 		val req = securityMode(baseUrl / CreateAccount) << (if (syncFrom.isDefined) params + (CreateAccount.syncFrom -> syncFrom.get) else params)
 		http x(securityMode(req) as_str) {
 			case (200, _,_, out) => Full(out())
+			case (403, _,_, out) =>
+				credentials.map(x=>login _ tupled (x) match { 
+					case Full(_) => createAccount(bankId, accountNumber, accountName, sync, syncFrom)
+					case Failure(x, y, z) => Failure(x, y, z)
+					case _ => Failure("Unknown")
+				}).getOrElse(Failure(out()))
 			case (code, _,_, out) => Failure(code + out())
 		}
 	}
-	def upload(bankId: String, accountNumber: String, period: String, fileName: String, inputStream: InputStream, contentLength :String) = {
+	def upload(bankId: String, accountNumber: String, period: String, fileName: String, inputStream: InputStream, contentLength :String) : Box[String] = {
 		val req = securityMode(baseUrl / Upload) << 
 			Map(
 				Upload.bankId->bankId, 
@@ -108,6 +122,12 @@ class SpendChartApi(val runMode: RunMode.Value) {
 			) <<* ("file", fileName, () => inputStream, Some(contentLength.toLong))
 		http x(req as_str) {
 			case (200, _,_, out) => Full(out())
+			case (403, _,_, out) =>
+				credentials.map(x=>login _ tupled (x) match { 
+					case Full(_) => upload(bankId, accountNumber, period, fileName, inputStream, contentLength)
+					case Failure(x, y, z) => Failure(x, y, z)
+					case _ => Failure("Unknown")
+				}).getOrElse(Failure(out()))
 			case (code, _,_, out) => Failure(code + out())
 		}
 	}
