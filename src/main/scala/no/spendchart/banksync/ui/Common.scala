@@ -2,7 +2,7 @@ package no.spendchart.banksync
 
 import java.awt.{ Font, Color, Cursor }
 import scala.swing._
-import scala.swing.event.{ MouseClicked, MousePressed, MouseEntered, MouseExited }
+import scala.swing.event.{ MouseClicked, MousePressed, MouseEntered, MouseExited, FocusGained, FocusLost }
 
 package object ui {
 	val RGB = "#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})".r	
@@ -12,20 +12,34 @@ package object ui {
 	}
 
 	object Link {
-		def apply(msg: String, action: =>Unit) = {
-			new Label(msg) {
+		def underline(font: Font, remove: Boolean = false) = {
+			import java.awt.font.TextAttribute._
+			import java.awt.font.TextAttribute
+			val attr = font.getAttributes().asInstanceOf[java.util.Map[TextAttribute, AnyRef]]
+			attr.put(UNDERLINE, if (remove) null else UNDERLINE_ON)
+			font.deriveFont(attr)
+		}
+		def apply(msg: String, action: =>Unit) = new Button(Action(msg)(action)) {
+				border = new javax.swing.border.EmptyBorder(0, 0, 0, 0)
+				borderPainted = false
+				focusPainted = false
+				contentAreaFilled = false
+				opaque = false
 				foreground = "#60a2cb"
-				listenTo(mouse.clicks, mouse.moves)
+				listenTo(mouse.clicks, mouse.moves, keys, this)
+				focusable = true
 				reactions += {
-					case MousePressed(src, point, i1, i2, b) => action
 					case MouseEntered(_, _, _) => 
 						foreground = "#71ab3d"
-					cursor = new Cursor(Cursor.HAND_CURSOR)	
+						cursor = new Cursor(Cursor.HAND_CURSOR)	
+					case FocusGained(_, _, _) => 
+						font = underline(font)
 					case MouseExited(_, _, _) => 
 						foreground = "#60a2cb"
-					cursor = new Cursor(Cursor.DEFAULT_CURSOR)	
+						cursor = new Cursor(Cursor.DEFAULT_CURSOR)	
+					case FocusLost(_, _, _) => 
+						font = underline(font, remove=true)
 				}
-			}
 		}
 	}
 
