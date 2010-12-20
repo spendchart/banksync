@@ -26,13 +26,15 @@ import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
-class VerifySms(s: SkandiabankenSync, messages: Option[String] = None) extends MigPanel {
-    val syncButton = Button("Send") {
+class VerifySms(s: SkandiabankenSync, messages: Option[String] = None) extends MigPanel with ExtendedPanel {
+    val syncButton = Button("Fortsett") {
       Banksync.setView(ui.Wait("Verifiserer kode fra SMS..."))
       SyncActor ! SmsCode(s, smsCode.text)
     }
     object smsCode extends TextField { columns = 11 }
-    add(Heading("Skandibanken - Bekreft kode fra SMS:"), Span(3) >> Wrap >> GapBottom(5))
+		override def onFocus = smsCode.requestFocus()
+		override val defaultButton = Some(syncButton)
+    add(Heading("Skandiabanken - Bekreft kode fra SMS:"), Span(3) >> Wrap >> GapBottom(5))
 		messages.foreach(x=>add(ErrorMessage(x), Span(3) >> Wrap >> GapBottom(5)))
     add(new Label("Kode fra SMS:"), GapRight(10))
     add(smsCode, Wrap)

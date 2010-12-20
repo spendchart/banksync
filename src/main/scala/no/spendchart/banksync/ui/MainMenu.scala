@@ -25,11 +25,13 @@ import java.awt.Font
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
-class MainMenu(msg: Option[Label] = None) extends MigPanel("flowy") {
+class MainMenu(msg: Option[Label] = None) extends MigPanel("flowy") with ExtendedPanel {
   border = javax.swing.BorderFactory.createTitledBorder("Tilgjengelige banker:")
   msg.foreach(msg => add(msg))
   add(Heading("Skandiabanken"))
-  add(Link("Vanlig innlogging (SMS)", Banksync.setView(skandiabanken.ui.Login(Banksync.s))), GapLeft(7 px))
+	val sk = Link("Vanlig innlogging (SMS)", Banksync.setView(skandiabanken.ui.Login(Banksync.s)))
+	override def onFocus = sk.requestFocus()
+  add(sk, GapLeft(7 px))
   add(Heading("Nordea"))
   add(new Label("Kommer snart..."), GapLeft(7 px))
 }

@@ -26,7 +26,7 @@ import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
 class ChoseAccounts(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccounts: Seq[(BankAccount, String)]) 
-		extends MigPanel("", "", "[]7[]0[]0[]") {
+		extends MigPanel("", "", "[]7[]0[]0[]") with ExtendedPanel {
   val accountsCheckBoxes = newAccounts.map(a => new CheckBox {
     text = a.name
   })
@@ -35,7 +35,7 @@ class ChoseAccounts(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAcco
 	add(new MigPanel("flowy, wrap 3", "", "[]0[]0[]0"){
 		  accountsCheckBoxes.foreach(add(_))
 	}, Wrap)
-  add(Button("Velg") {
+  val submitButton = Button("Fortsett") {
     //find the accounts with the same name as the _selected_ checkbox text
     val (sync, noSync) = newAccounts.partition(account => accountsCheckBoxes.filter(_.selected).map(_.text).contains(account.name))
     SyncActor ! CreateAccount(noSync, None)
@@ -46,7 +46,10 @@ class ChoseAccounts(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAcco
       case sync =>
         Banksync ! msg.ChosePeriods(s, sync, oldAccounts)
     }
-  }, Skip(1) >> AlignX.trailing)
+  }
+	add(submitButton, Skip(1) >> AlignX.trailing)
+	override val defaultButton = Some(submitButton)
+	override def onFocus = accountsCheckBoxes.headOption.map(_.requestFocus())
   add(new Label(""), Wrap) //Hack	
   border = Swing.EmptyBorder(5, 5, 5, 5)
 }

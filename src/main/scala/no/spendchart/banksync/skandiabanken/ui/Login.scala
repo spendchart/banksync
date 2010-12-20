@@ -28,25 +28,27 @@ import no.spendchart.banksync.ui.{ ErrorMessage, OkMessage, Heading }
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
-class Login(s: SkandiabankenSync, messages: List[String] = Nil) extends MigPanel {
+class Login(s: SkandiabankenSync, messages: List[String] = Nil) extends MigPanel with ExtendedPanel {
     object socialSecurity extends TextField { columns = 11 }
     object bankPassword extends PasswordField { columns = 11 }
     val syncButton = Button("Start") {
       Banksync.setView(ui.Wait("Logger inn..."))
       SyncActor ! no.spendchart.banksync.Login(s, socialSecurity.text, bankPassword.password)
     }
+		override def onFocus = socialSecurity.requestFocus()
+		override val defaultButton = Some(syncButton)
 		def addMessages(x:List[String]) {x match {
 			case Nil => (); 
 			case x::Nil => add(ErrorMessage(x), Span(3) >> Wrap >> GapBottom(5)); 
 			case x::y => {add(ErrorMessage(x), Span(3) >> Wrap); addMessages(y)}}
 		}
-    add(Heading("Skandibanken - Vanlig innlogging (SMS):"), Span(3) >> Wrap >> GapBottom(5))
+    add(Heading("Skandiabanken - Vanlig innlogging (SMS):"), Span(3) >> Wrap >> GapBottom(5))
 		addMessages(messages)
     add(new Label("Personnummer:"), GapRight(10))
     add(socialSecurity, Wrap)
     add(new Label("Nettbank passord:"))
     add(bankPassword, Wrap)
-    add(syncButton, Skip(1) >> AlignX.trailing)
+    add(syncButton, Skip(1) >> AlignX.trailing )
 	  add(new Label(""), Wrap) //Hack	
     border = Swing.EmptyBorder(5, 5, 5, 5)
 } 

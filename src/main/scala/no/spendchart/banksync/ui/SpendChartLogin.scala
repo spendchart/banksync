@@ -22,19 +22,21 @@ import scala.swing._
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
 
-class SpendChartLogin(messages: List[String] = Nil) extends MigPanel {
+class SpendChartLogin(messages: List[String] = Nil) extends MigPanel with ExtendedPanel{
   val loginButton = Button("Logg inn") {
 		Banksync.setView(Wait("Logger inn..."))
 		SyncActor ! msg.SpendChartLogin(username.text, password.password)
   }
-  object username extends TextField { columns = 11 }
+  object username extends TextField { columns = 11; override val hasFocus = true }
   object password extends PasswordField { columns = 11 }
+	override def onFocus = username.requestFocus()
+	override val defaultButton = Some(loginButton)
   add(Heading("Logg inn til SpendChart.no"), Span(3) >> Wrap >> GapBottom(5 px))
   messages.foreach(msg => add(ErrorMessage(msg), Span(3) >> Wrap >> GapBottom(5 px)))
   add(new Label("Brukernavn:"), GapRight(10 px))
-  add(username, Wrap)
+	add(username, Wrap)
   add(new Label("Passord:"))
-  add(password, Wrap)	
+  add(password, Wrap)
   add(loginButton, Skip(1) >> AlignX.trailing)
   add(new Label(""), Wrap) //Hack	
   border = Swing.EmptyBorder(5, 5, 5, 5)

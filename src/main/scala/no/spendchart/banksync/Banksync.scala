@@ -116,8 +116,15 @@ object Banksync extends Application with Actor {
       location = (x, y)
     }
   }
-  def setView(panel: Panel) { frame.contents = panel }
-
+  def setView(panel: Panel) { 
+		frame.contents = panel 
+		panel match {
+			case f: ExtendedPanel => 
+				f.onFocus()
+				f.defaultButton.map(frame.defaultButton=_)
+			case _ => 
+		}
+	}
   setView(ui.SpendChartLogin())
 
 

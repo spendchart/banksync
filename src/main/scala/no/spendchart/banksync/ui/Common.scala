@@ -4,6 +4,11 @@ import java.awt.{ Font, Color, Cursor }
 import scala.swing._
 import scala.swing.event.{ MouseClicked, MousePressed, MouseEntered, MouseExited, FocusGained, FocusLost }
 
+trait ExtendedPanel {	
+		def onFocus(): Unit = () => {}
+		val defaultButton: Option[Button] = None
+}
+
 package object ui {
 	val RGB = "#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})".r	
 	def hexToInt(x: String) =	Integer.valueOf(x, 16).intValue
