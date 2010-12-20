@@ -26,6 +26,7 @@ XPStyle on
 
 !insertmacro MUI_LANGUAGE "Norwegian"
 
+InstallDirRegKey HKLM "Software\SpendChart\Banksync" "InstallDir"
 InstallDir $PROGRAMFILES\SpendChart
 
 Function finishpageaction
