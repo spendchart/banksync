@@ -39,6 +39,7 @@ class SpendChartLogin(messages: List[String] = Nil) extends MigPanel with Extend
   add(password, Wrap)
   add(loginButton, Skip(1) >> AlignX.trailing)
   add(new Label(""), Wrap) //Hack	
+  add(new Label("Du kan be om invitasjon til SpendChart på http://www.spendchart.no."), Span(3) >> GapTop(30))
   border = Swing.EmptyBorder(5, 5, 5, 5)
 }
 object SpendChartLogin {
