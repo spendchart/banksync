@@ -65,4 +65,9 @@ package object ui {
 			font = new Font("Arial Narrow", Font.BOLD, 14)
 		}
 	}
+	object Heading2 {
+		def apply(str: String) = new Label(str) {	
+			font = new Font("Arial Narrow", Font.BOLD, 12)
+		}
+	}
 }
