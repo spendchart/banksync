@@ -14,7 +14,7 @@ ShowInstDetails nevershow
 
 ;You want to change the next two lines too
 !define TARGET "..\target\scala_2.8.1"
-!define FILE "banksync_2.8.1-0.3.1.min.jar"
+!define FILE "banksync_2.8.1-0.4-SNAPSHOT.min.jar"
 !define JAR "${TARGET}\${FILE}"
  
 Section ""
