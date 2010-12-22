@@ -27,8 +27,8 @@ import no.trondbjerkestrand.migpanel.constraints._
 
 class MainMenu(msg: Option[Label] = None) extends MigPanel("flowy") with ExtendedPanel {
   add(Heading("Synkroniser kontoutskrifter"))
-  msg.foreach(msg => add(msg))
 	add(new Label("Last ned dine siste kontoutskrifter og synkroniser med SpendChart!"))	
+  msg.foreach(msg => add(msg))
   add(Heading2("Skandiabanken"))
 	val sk = Link("Vanlig innlogging (SMS)", Banksync.setView(skandiabanken.ui.Login(Banksync.s)))
 	override def onFocus = sk.requestFocus()
