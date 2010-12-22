@@ -26,7 +26,7 @@ For å kjøre programmet direkte kan du benytte:
 
 		sbt run
 
-Script for generering av .exe fil er gjort tilgjengelig i nis katalogen.
+Script for generering av .exe fil er gjort tilgjengelig i nsis katalogen.
 
 ### Endringsønsker / patcher: ###
 [Endringsønsker](https://github.com/spendchart/banksync/issues) og pull requests mottas med takk. Vi vil verifisere all 
