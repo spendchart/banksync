@@ -30,7 +30,7 @@ InstallDirRegKey HKLM "Software\SpendChart\Banksync" "InstallDir"
 InstallDir $PROGRAMFILES\SpendChart
 
 Function finishpageaction
-	createShortCut "$DESKTOP\SpendChart.lnk" "$PROGRAMFILES\SpendChart\Banksync.exe"
+	createShortCut "$DESKTOP\Banksync.lnk" "$PROGRAMFILES\SpendChart\Banksync.exe"
 FunctionEnd
 
 Section
@@ -38,6 +38,7 @@ Section
 	WriteRegStr HKLM "Software\SpendChart\Banksync" "InstallDir" "$INSTDIR"
 	SetOutPath $INSTDIR
   File Banksync.exe
+	createShortCut "$SMPROGRAMS\Banksync.lnk" "$PROGRAMFILES\SpendChart\Banksync.exe"
 SectionEnd
 
 #Section
