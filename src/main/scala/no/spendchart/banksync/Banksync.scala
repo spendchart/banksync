@@ -165,6 +165,8 @@ object Banksync extends Application with Actor {
       frame.visible = true
     }
   })
+	} else {
+		frame.centerOnScreen
 	}
 	if (showAtStartup) {
 		frame.visible = true
