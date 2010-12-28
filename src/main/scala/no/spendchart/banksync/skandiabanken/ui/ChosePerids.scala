@@ -33,13 +33,13 @@ class ChosePeriods(s: SkandiabankenSync, newAccounts: Seq[BankAccount], oldAccou
   add(new Label("Velg hvor langt tilbake i tid du ønsker å synkronisere:"), Span(3) >> Wrap >> GapBottom(0))
   add(new Label("Fra:"), GapRight(10 px))
   add(periodsComboBox, Wrap)
-	override val defaultButton = Some(syncButton)
-	override def onFocus = periodsComboBox.requestFocus()
 	val syncButton = Button("Fortsett") {
-    Banksync.setView(ui.Wait("Forbereder synkronisering"))
+    Banksync ! msg.Wait("Forbereder synkronisering")
     SyncActor ! CreateAccount(newAccounts, Some(periodsComboBox.selection.item))
     SyncActor ! msg.StartSync(s, newAccounts.map((_, periodsComboBox.selection.item)).toList ::: oldAccounts.toList)
   }
+	override val defaultButton = Some(syncButton)
+	override def onFocus = periodsComboBox.requestFocus()
   add(syncButton, Skip(1) >> AlignX.trailing)
   add(new Label(""), Wrap) //Hack	
   border = Swing.EmptyBorder(5, 5, 5, 5)
