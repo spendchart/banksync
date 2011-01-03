@@ -36,7 +36,7 @@ class Banksync(info: ProjectInfo) extends DefaultProject(info) with Eclipsify wi
 
 	val slf4jDep = "org.slf4j" % "slf4j-log4j12" % "[1.5.6,)"
   val commonsLogging = "org.apache.commons" % " commons-logging" 
-	val htmlunitDep = "net.sourceforge.htmlunit" % "htmlunit" % "2.7"
+	val htmlunitDep = "net.sourceforge.htmlunit" % "htmlunit" % "2.8"
 	val junitDep = "junit" % "junit" % "4.5" % "test"
 	val scalatest = "org.scalatest" % "scalatest" % "1.2" % "test"
 	val swing = "org.scala-lang" % "scala-swing" % "2.8.1"
