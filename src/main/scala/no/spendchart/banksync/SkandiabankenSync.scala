@@ -217,7 +217,7 @@ class SkandiabankenSyncImpl extends SkandiabankenSync {
     case ac: SkandiabankenAccount => fetchReport(periode, ac.skandiabankenId)
   }
 
-  def fetchReport(periode: Int, skId: String): Option[(String, InputStream, String, String)] = {
+  def fetchReport(periode: Int, skId: String): Option[MonthlyReport] = {
     try {
       val urlString = "https://secure.skandiabanken.no/SKBSECURE/" +
         "Bank/Account/Statement/DownloadAccountStatement.ashx" +
@@ -234,17 +234,20 @@ class SkandiabankenSyncImpl extends SkandiabankenSync {
         }
       }
 
-      for {
-        page <- Option(client.getPage(urlString).asInstanceOf[TextPage])
-        resp <- Option(page.getWebResponse.asInstanceOf[WebResponseImpl])
-        stream <- Option(resp.getContentAsStream)
-        enc <- Option(resp.getContentCharset)
-        contentLength <- Option(resp.getResponseHeaderValue("Content-length"))
-        contentDispositionHeader <- Option(resp.getResponseHeaderValue("Content-disposition"))
-        filename <- getFileName(contentDispositionHeader)
-      } yield (filename, stream, enc, contentLength)
+      val page = client.getPage(urlString).asInstanceOf[TextPage]
+      val resp = page.getWebResponse
+      val stream = resp.getContentAsStream
+      val enc = resp.getContentCharset
+      val contentLength = resp.getResponseHeaderValue("Content-length")
+      val contentDispositionHeader = resp.getResponseHeaderValue("Content-disposition")
+      val filename = getFileName(contentDispositionHeader)
+      Option(MonthlyReport(filename.get, stream, enc, contentLength))
     } catch {
-      case e => None
+      case e => {
+        println(e.getMessage)
+        e.printStackTrace
+        None
+      }
     }
   }
 
@@ -478,11 +481,14 @@ object InsertSmsCodePage {
   }
 }
 
+// filename mostly for debugging, 
+case class MonthlyReport(filename: String, inputStream: InputStream, encoding: String, contentLength: String)
+
 trait SkandiabankenSync {
   def initLogin(socialSecurityNumber: String, password: Array[Char]): step1.Outcome
   def completeLogin(code: String): step2.Outcome
   def getAccounts(): Option[Seq[BankAccount]]
-  def fetchReport(periode: Int, account: BankAccount): Option[(String, InputStream, String, String)]; //skandiabanken filename (for debug), stream, enc
+  def fetchReport(periode: Int, account: BankAccount): Option[MonthlyReport];
   def getPeriods(account: BankAccount): List[String]
   def getPeriodId(account: BankAccount, period: String): Int
 }
@@ -507,10 +513,10 @@ class SkandiabankenSyncTest extends SkandiabankenSync {
 
   override def fetchReport(periode: Int, account: BankAccount) = {
     (periode, account.number) match {
-      case (0, "97130000000") => Some(("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_07_01-2010_07_31.csv"), "", "5988"))
-      case (_, "97130000000") => Some(("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_08_01-2010_08_31.csv"), "", "7448"))
-      case (0, "97130000001") => Some(("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_07_01-2010_07_31.csv"), "", "5988"))
-      case (_, "97130000001") => Some(("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_08_01-2010_08_31.csv"), "", "7448"))
+      case (0, "97130000000") => Some(MonthlyReport("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_07_01-2010_07_31.csv"), "", "5988"))
+      case (_, "97130000000") => Some(MonthlyReport("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_08_01-2010_08_31.csv"), "", "7448"))
+      case (0, "97130000001") => Some(MonthlyReport("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_07_01-2010_07_31.csv"), "", "5988"))
+      case (_, "97130000001") => Some(MonthlyReport("", new FileInputStream("src/test/resources/accountsummaries/files_2_97130000000_2010_08_01-2010_08_31.csv"), "", "7448"))
       case x => throw new Exception("Unknown period or account number: " + x)
     }
   }

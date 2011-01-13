@@ -251,9 +251,9 @@ object SyncActor extends Actor {
               (0 to s.getPeriodId(account, period)).foreach(p => {
                 Banksync ! msg.Sync(account, periods(p))
                 s.fetchReport(p, account) match {
-                  case Some((filename, stream, enc, contentLength)) =>
-                    println(filename + " downloaded")
-                    api.upload("1", account.number, periods(p), filename, stream, contentLength)
+                  case Some(report) =>
+                    println(report.filename + " downloaded")
+                    api.upload("1", account.number, periods(p), report.filename, report.inputStream, report.contentLength)
                   case None =>
                     println("None")
                 }
