@@ -23,7 +23,6 @@ import java.net.URL
 import java.net.URLConnection
 import java.nio.charset.Charset
 import java.lang.{ String => JString }
-import org.apache.commons.httpclient.Cookie
 
 import scala.collection.JavaConversions._
 
@@ -103,7 +102,7 @@ class SkandiabankenSyncImpl extends SkandiabankenSync {
 	 * Using the following js preProcessor solves the problem. 
 	 */
   val preProcessor = new ScriptPreProcessor {
-    def preProcess(htmlPage: HtmlPage, sourceCode: JString, sourceName: JString, htmlElement: HtmlElement): JString = {
+    def preProcess(htmlPage: HtmlPage, sourceCode: JString, sourceName: JString, lineNumber: Int, htmlElement: HtmlElement): JString = {
       val missingFunc =
         if (sourceName.contains("SmsOtp.aspx") && sourceCode.contains("keepAnimationByElementId")) {
           """function keepAnimationByElementId(imageId) {
