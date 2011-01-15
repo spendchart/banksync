@@ -24,6 +24,10 @@ import scala.swing._
 import java.awt.Font
 import no.trondbjerkestrand.migpanel._
 import no.trondbjerkestrand.migpanel.constraints._
+import no.spendchart.banksync.{msg => ctrlMsg}
+
+import no.spendchart.banksync.sparebank1.StartSparebank1
+import no.spendchart.banksync.nordea.StartNordea
 
 class MainMenu(msg: Option[Label] = None) extends MigPanel("flowy") with ExtendedPanel {
   add(Heading("Synkroniser kontoutskrifter"))
@@ -34,7 +38,15 @@ class MainMenu(msg: Option[Label] = None) extends MigPanel("flowy") with Extende
 	override def onFocus = sk.requestFocus()
   add(sk, GapLeft(7 px))
   add(Heading2("Nordea"))
-  add(new Label("Kommer snart..."), GapLeft(7 px))
+  add(Link("BankId", Banksync.setView(
+		ui.SocialSecurity(	title = "Nordea BankId - Login",
+												action = (ss: String) => {Banksync ! ctrlMsg.Wait("Logger inn..."); SyncActor ! StartNordea(ss)}))),
+		GapLeft(7 px))
+  add(Heading2("Sparebank1"))
+	add(Link("Nordvest - BankId", Banksync.setView(
+		ui.SocialSecurity(	title = "Sparebank1 Nordvest BankId - Login",
+												action = (ss: String) => {Banksync ! ctrlMsg.Wait("Logger inn..."); SyncActor ! StartSparebank1(ss)}))),
+		GapLeft(7 px))
 }
 
 object MainMenu {

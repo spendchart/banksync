@@ -262,6 +262,8 @@ object SyncActor extends Actor {
           }
           Banksync ! msg.MainMenu(Some(OkMessage("Synkronisering gjennomført.")))
         case msg.Shutdown => exit()
+        case sparebank1.StartSparebank1(fnr) => (new sparebank1.Sparebank1).login(fnr) 
+        case nordea.StartNordea(fnr) => (new nordea.Nordea).login(fnr) 
       }
     }
   }
