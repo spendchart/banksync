@@ -13,12 +13,14 @@ at denne er bygd fra kildekoden som er gjort tilgjengelig på [http://github/spe
 ### Byggeinstruksjoner: ###
 For å bygge Banksync trenger du [simple-build-tool](http://code.google.com/p/simple-build-tool/). 
 
-Med [simple-build-tool](http://code.google.com/p/simple-build-tool/) og [git](http://git-scm.com) installert kan du gå fram som følger:
+Med [simple-build-tool](http://code.google.com/p/simple-build-tool/) (1) og [git](http://git-scm.com) installert kan du gå fram som følger:
    
 		git clone git://github.com/spendchart/banksync.git
 		cd banksync
 		sbt update
 		sbt proguard
+
+(1) Det kan være nødvendig å øke ressursene for sbt: I sbt.bat eller sbt.sh benytter vi -Xmx1g -Xss1m -XX:MaxPermSize=256m. 
 
 Den ferdige jar filen kan du finne i *target/scala_2.8.1/banksync_.2.8.1-1.0.min.jar*.
 
