@@ -89,7 +89,7 @@ public class AppletViewer {
     public void put(URI uri, Map<String, List<String>> responseHeaders) throws IOException {
       LOGGER.debug("PUT cookie from {} headers= {}", uri, responseHeaders);
 			for(String key: responseHeaders.keySet()){
-					if (key.toLowerCase().equals("set-cookie"))
+					if (key != null && key.toLowerCase().equals("set-cookie"))
 				      LOGGER.debug(key + "=" + responseHeaders.get(key));
 			}	
       manager.put(uri, responseHeaders);
